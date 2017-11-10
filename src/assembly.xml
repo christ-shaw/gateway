@@ -1,0 +1,44 @@
+
+<assembly>
+    <id>bin</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+        <fileSet>
+            <directory>target</directory>
+            <outputDirectory>\</outputDirectory>
+            <includes>
+                <include>processkeeper-0.1.jar</include>
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>\</outputDirectory>
+            <includes>
+                <include>run.bat</include>
+                <include>kill.bat</include>
+                 <include>stop.bat</include>
+				 <include>run.sh</include>
+				 <include>stop.sh</include>
+                 <include>curl.exe</include>
+                 <include>app-status.bat</include>
+                 <include>jq.exe</include>
+                <include>app-status.filter</include>
+                <!--<include>sharedConfig.properties</include>-->
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <directory>works</directory>
+            <outputDirectory>\works</outputDirectory>
+            <excludes>
+                <exclude>*/**</exclude>
+            </excludes>
+        </fileSet>
+
+    </fileSets>
+
+
+</assembly>

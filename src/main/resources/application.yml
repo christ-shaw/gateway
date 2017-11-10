@@ -1,0 +1,24 @@
+server:
+  port: 12345
+
+spring:
+  boot:
+    admin:
+      context-path: /ztev
+
+#spring:
+#  application:
+#    name: zookeeper-example
+#  cloud:
+#    config:
+#      enabled: false
+#    zookeeper:
+#      connect-string: localhost:4457
+#      discovery:
+#        metadata:
+#          management.context-path: /foo
+#          health.path: /ping
+#
+#management.context-path: /foo
+#endpoints.health.path: /ping
+

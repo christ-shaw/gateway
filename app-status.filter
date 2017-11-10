@@ -1,0 +1,12 @@
+if  .bStarted == true  then 
+            "###############################################",
+			 "application started successfully",
+			"time spending summary",
+			.summaries,
+            "###############################################"	
+     else  
+	 "###############################################",
+	 "application started failed" ,
+	 "###############################################"
+	 end
+	 

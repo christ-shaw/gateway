@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/static/css/stsm.css" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/works/gateway-0.0.1-bin/consolelog/stop_output.log" charset="UTF-16" />
+    <file url="file://$PROJECT_DIR$/works/springboot-pengy/consolelog/stop_output.log" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/works/ztev-advertise-service-1.0-bin/consolelog/start_output.log" charset="GBK" />
+  </component>
+</project>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>spring boot keeper</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" media="all" href="../static/css/stsm.css" th:href="@{/css/stsm.css}"/>
+    <!--<link rel="stylesheet" type="text/css" media="all" href="../static/css/gtvg.css" th:href="@{/css/gtvg.css}"/>-->
+    <link rel="stylesheet" type="text/css" media="all" href="../static/css/zui.css" th:href="@{/css/zui.css}"/>
+</head>
+
+<body>
+
+<div class="row">
+    <div class="col-md-12 ">
+        <div class="col-md-2" style="padding-top: 20px; padding-left: 0px;">
+            <img src="../static/images/index.png" alt="ZTEV logo" title="ZTEV logo"
+                 th:src="@{/images/index.png}"/>
+        </div>
+        <div class="col-md-1"
+             style="background-color: rgb(7, 179, 215); width: 2px; padding-left: 0px; padding-right: 0px; height: 55px; padding-top: 0px; margin-top: 28px;">
+        </div>
+        <div class="col-md-5" style="padding-top: 15px; color: #07B3D9;">
+            <h1>中兴新能源汽车</h1>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <form action="#" th:action="@{/databaseConfig}" th:object="${databaseConfig}" method="post">
+
+        <fieldset>
+            <legend >数据库配置</legend>
+
+            <div th:marginheight="5px">
+                <label th:for="数据库URL">数据库URL</label>
+                <input type="text" th:field="*{ip}"/>
+            </div>
+
+            <div th:marginheight="5px">
+                <label th:for="userName">用户名</label>
+                <input type="text" th:field="*{userName}"/>
+            </div>
+            <div th:marginheight="5px">
+                <label th:for="password">密码</label>
+                <input type="text" th:field="*{password}"/>
+            </div>
+            <div class="submit">
+                <button type="submit" name="save" th:text="apply">apply</button>
+            </div>
+        </fieldset>
+
+    </form>
+</div>
+
+
+<h1>Product list</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>名称</th>
+        <th>路径</th>
+        <th>启动状态</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody th:remove="all-but-first">
+    <tr th:each="o : ${units}" th:class="odd">
+
+        <form action="#" th:action="@{/instance}" th:object="${starterInfo}"  method="post">
+            <td th:text="${o.instanceName}">N/A</td>
+            <td th:text="${o.executor.getAbsolutePath()}">N/A</td>
+            <td th:text="${o.state.name()}">N/A</td>
+            <td><input type="hidden" th:value="${o.instanceName}" name="instanceName"/>
+                <button type="submit" name="action" th:text="${o.state.name()=='STOP'}? '启动':'停止'">启动</button>
+            </td>
+        </form>
+    </tr>
+    </tbody>
+
+</table>
+
+</body>
+
+</html>
+

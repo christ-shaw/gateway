@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.ztev</groupId>
+    <artifactId>processkeeper</artifactId>
+    <version>0.1</version>
+    <packaging>jar</packaging>
+
+    <name>processkeeper</name>
+    <description>spring boot process keeper</description>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.2.RELEASE</version>
+        <relativePath/>
+    </parent>
+
+    <properties>
+        <assembly-directory>${project.basedir}/target/distribution</assembly-directory>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <thymeleaf.version>3.0.5.RELEASE</thymeleaf.version>
+        <thymeleaf-layout-dialect.version>2.0.0</thymeleaf-layout-dialect.version>
+        <spring-cloud.version>Dalston.SR1</spring-cloud.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-server</artifactId>
+            <version>1.5.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ztev</groupId>
+            <artifactId>spring-boot-admin-server-ui</artifactId>
+            <version>20170927</version>
+        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.springframework.cloud</groupId>-->
+        <!--<artifactId>spring-cloud-starter-zookeeper-discovery</artifactId>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.18</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jolokia</groupId>
+            <artifactId>jolokia-core</artifactId>
+            <version>1.3.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.janino</groupId>
+            <artifactId>janino</artifactId>
+            <version>2.6.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-archiver</artifactId>
+            <version>3.5</version>
+        </dependency>
+
+
+    </dependencies>
+
+
+    <!--<dependencyManagement>-->
+    <!--<dependencies>-->
+    <!--<dependency>-->
+    <!--<groupId>org.springframework.cloud</groupId>-->
+    <!--<artifactId>spring-cloud-dependencies</artifactId>-->
+    <!--<version>${spring-cloud.version}</version>-->
+    <!--<type>pom</type>-->
+    <!--<scope>import</scope>-->
+    <!--</dependency>-->
+    <!--</dependencies>-->
+    <!--</dependencyManagement>-->
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>make-zip</id>
+                        <!-- 绑定到package生命周期阶段上 -->
+                        <phase>package</phase>
+                        <goals>
+                            <!-- 绑定到package生命周期阶段上 -->
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors> <!--描述文件路径-->
+                                <descriptor>src/assembly.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>obfuscate</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.wvengen</groupId>
+                        <artifactId>proguard-maven-plugin</artifactId>
+                        <version>2.0.14</version>
+                        <executions>
+                            <execution>
+                                <id>proguard</id>
+                                <phase>process-classes</phase>
+                                <goals>
+                                    <goal>proguard</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <injar>classes</injar>
+                            <!--<outjar>./</outjar>-->
+                            <libs>
+                                <lib>${java.home}/lib/rt.jar</lib>
+                                <lib>${java.home}/lib/jce.jar</lib>
+                                <lib>${java.home}/lib/jsse.jar</lib>
+                            </libs>
+                            <obfuscate>true</obfuscate>
+                            <injarNotExistsSkip>true</injarNotExistsSkip>
+                            <includeDependency>true</includeDependency>
+                            <options>
+                                <option>-dontoptimize</option>
+                                <option>-verbose</option>
+                                <option>-printseeds seeds.txt</option>
+                                <option>-optimizations !class/marking/final</option>
+                                <option>-adaptresourcefilenames **.properties,**.yml</option>
+                                <option>-adaptresourcefilecontents **.properties,**.yml,META-INF/MANIFEST.MF</option>
+
+
+                                <option><![CDATA[
+                            -keep public class * {
+                                public <init>(...);
+                                public void set*(...);
+                                public void init*(...);
+                                public void close*(...);
+                                public ** get*(...);
+                                public boolean is*(...);
+                                public boolean can*(...);
+                                 public static void main(...);
+                            }
+                            ]]></option>
+
+                                <option>
+                                    <![CDATA[
+                            -keep public class * extends org.springframework.boot.web.support.SpringBootServletInitializer]]>
+                                </option>
+
+                                <option><![CDATA[
+                              -keepclassmembers class * {
+                               @org.springframework.beans.factory.annotation.Autowired *;
+                        @org.springframework.beans.factory.annotation.Qualifier *;
+                        @org.springframework.beans.factory.annotation.Value *;
+                        @org.springframework.beans.factory.annotation.Required *;
+                        @org.springframework.context.annotation.Bean *;
+                        @org.springframework.context.annotation.Primary *;
+                        @org.springframework.boot.context.properties.ConfigurationProperties *;
+                        @javax.inject.Inject *;
+                        @javax.annotation.PostConstruct *;
+                        @javax.annotation.PreDestroy *;
+                            }]]>
+                                </option>
+
+                                <option>-keep @org.springframework.stereotype.Service class *</option>
+                                <option>-keep @org.springframework.stereotype.Controller class *</option>
+                                <option>-keep @org.springframework.stereotype.Component class *</option>
+                                <option>-keep @org.springframework.stereotype.Repository class *</option>
+
+                                <option>-keep @org.springframework.context.annotation.Configuration class *</option>
+                                <option>-keep @org.springframework.web.bind.annotation.ControllerAdvice class *</option>
+                                <option>-keep @org.springframework.boot.context.properties.ConfigurationProperties class
+                                    *
+                                </option>
+                                <option>-keep @org.springframework.boot.autoconfigure.SpringBootApplication class *
+                                </option>
+
+                                <option>-allowaccessmodification</option>
+                                <option>-keepattributes</option>
+                                <option>-keepattributes
+                                    Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod
+                                </option>
+
+                                <!--<option><![CDATA[-->
+                                <!-- -keepclassmembernames class * {-->
+                                <!--java.lang.Class class$(java.lang.String);-->
+                                <!--java.lang.Class class$(java.lang.String, boolean);-->
+                                <!--｝]]>-->
+                                <!--</option>-->
+
+
+                                <option><![CDATA[
+                                    -keepclassmembers enum * {
+                                          public static **[] values();
+                                       public static ** valueOf(java.lang.String);
+                                       public static ** fromValue(java.lang.String);
+                        }]]>
+                                </option>
+
+                                <!--<option><![CDATA[-->
+                                <!-- -keepclassmembers class * implements java.io.Serializable {-->
+                                <!--static final long serialVersionUID;-->
+                                <!--private static final java.io.ObjectStreamField[] serialPersistentFields;-->
+                                <!--!static !transient<fields>;-->
+                                <!--!private<fields>;-->
+                                <!--!private<methods>;-->
+                                <!--private void writeObject(java.io.ObjectOutputStream);-->
+                                <!--private void readObject(java.io.ObjectInputStream);-->
+                                <!--java.lang.Object writeReplace();-->
+                                <!--java.lang.Object readResolve();-->
+                                <!--}]]>-->
+                                <!--</option>-->
+
+
+                            </options>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>net.sf.proguard</groupId>
+                                <artifactId>proguard-base</artifactId>
+                                <version>5.3.3</version>
+                                <scope>runtime</scope>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

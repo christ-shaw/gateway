@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- %m输出的信息,%p日志级别,%t线程名,%d日期,%c类的全名,,,, -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d %p (%file:%line\)- %m%n</pattern>
+        </encoder>
+    </appender>
+	<if condition='isDefined("PID")'>
+	  <then>
+	    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	      <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+		    <fileNamePattern>log/processkeeper_%d{yyyy-MM-dd}_${PID}_%i.log.zip</fileNamePattern>
+		    <maxHistory>30</maxHistory> 
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+					<!-- or whenever the file size reaches 64 MB -->
+			<maxFileSize>10 MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		  </rollingPolicy>
+		  <encoder>
+			<pattern>%d [%p] [%thread] (%file:%line\)- %m%n</pattern>
+				<!-- 此处设置字符集 -->
+			<charset>UTF-8</charset>
+		  </encoder>
+	    </appender>
+	  </then>
+	  <else>
+	    <appender name="FILE" class="ch.qos.logback.core.ConsoleAppender">
+          <encoder>
+            <pattern>%d [%p] [%thread] (%file:%line\)- %m%n</pattern>
+            <!-- 此处设置字符集 -->
+            <charset>UTF-8</charset>
+          </encoder>
+        </appender>
+	  </else>
+	</if>
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
+    </root>
+    <!-- 监控包路径 -->
+    <logger name="org.springframework" level="INFO" />
+    <logger name="org.apache.ibatis" level="INFO" />
+    <logger name="org.mybatis" level="INFO" />
+    <logger name="org.hibernate" level="INFO" />
+    <logger name="org.apache.activemq" level="INFO" />
+    <logger name="org.apache.zookeeper" level="INFO" />
+    <logger name="com.alibaba" level="INFO" />
+	<logger name=" de.codecentric" level="DEBUG"/>
+</configuration>
